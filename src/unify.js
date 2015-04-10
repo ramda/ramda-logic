@@ -1,39 +1,40 @@
 var R = require('ramda');
-var substitutions = require('./substitutions');
+var lvar = require('./lvar');
+var walk = require('./walk');
 
+var isArrayLike = R.isArrayLike;
 var head = R.head;
 var tail = R.tail;
 var prepend = R.prepend;
 
 function _unify(u, v, s) {
-  var u = walk(u s);
-  var v = walk(v s);
+  var u = walk(u, s);
+  var v = walk(v, s);
 
-  if (isLvar(u) && isLVar(v)) {
+  if (lvar.is(u) && lvar.is(v)) {
     return s;
   } 
-  if (isLVar(u)) {
+  if (lvar.is(u)) {
     return extendS(u, v, s);
   } 
-  if (isLVar(v)) {
+  if (lvar.is(v)) {
     return extendS(v, u, s);
   } 
-  if (typeof u.equals === 'function' && u.equals(v)) {
+  if (u && typeof u.equals === 'function' && u.equals(v)) {
     return s;
   }
   if (isArrayLike(u) && isArrayLike(v)) {
-    var 
+    var s = _unify(head(u), head(v), s);
+    // TODO: rewrite this non-recursively:
+    return s && _unify(tail(u), tail(v), s);
   }
-
-          47         ((and (pair? u) (pair? v))
-             48           (let ((s (unify (car u) (car v) s)))
-                49             (and s (unify (cdr u) (cdr v) s))))
+  return false;
 }
 
 // unify :: LVar -> LVar -> ([Subs] -> Subs)
 module.exports = function unify(u, v) {
   return function(subs) {
     var s = _unify(u, v, head(subs));
-    return s ? prepend(s, tail(subs)) : substitutions.empty();
+    return s ? prepend(s, tail(subs)) : [];
   };
 };

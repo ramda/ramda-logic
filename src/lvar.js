@@ -9,8 +9,10 @@ LVar.prototype.isLvar = true;
 // Variable equality is determined by coincidence of indices in vectors.
 // (define (var=? x1 x2 ) (= (vector-ref x1 0) (vector-ref x2 0)))
 LVar.prototype.equals = function(that) {
-    return isLvar(that) && this.name === that.name;
+  return lvar.is(that) && this.name === that.name;
 };
+
+Object.freeze(LVar.prototype);
 
 function lvar(name) {
   return new LVar(name);
@@ -18,7 +20,7 @@ function lvar(name) {
 
 // (define (var? x) (vector? x))
 lvar.is = function(x) {
-  return x.isLVar;
+  return x != null && x.isLVar;
 };
 
 module.exports = lvar;

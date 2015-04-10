@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
 var lvar = require('../src/lvar');
-var empty = require('../src/empty');
+var unify = require('../src/unify');
 
 describe('unify', function() {
   var vx = lvar('x');
@@ -9,6 +9,6 @@ describe('unify', function() {
   var vq = lvar('q');
 
   it('associates two logic variables', function() {
-    expect(unify(vx, vy, empty())).to.eql({'x': vy});
+    expect(unify(vx, vy)([])).to.eql([{'x': vy}]);
   });
 });
