@@ -1,3 +1,6 @@
+var merge = require('ramda').merge;
+var smap = require('./smap');
+
 // the ext-s operator extends the substitution
 // with a new binding. 
 // When extending the substitution,
@@ -7,5 +10,7 @@
 // such prohibition.
 // (define (ext- s x v s) `((, x . , v) . , s))
 module.exports = function(x, v, s) {
-  return s.concat({x.name: v});
+  var binding = {};
+  binding[x.name] = v;
+  return smap(merge(s, binding));
 };

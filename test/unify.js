@@ -1,14 +1,33 @@
 var expect = require('chai').expect;
 var lvar = require('../src/lvar');
+var smap = require('../src/smap');
 var unify = require('../src/unify');
 
 describe('unify', function() {
+  var vu = lvar('u');
+  var vv = lvar('v');
+  var vw = lvar('w');
   var vx = lvar('x');
-  var vy = lvar('y');
-  var vz = lvar('z');
-  var vq = lvar('q');
 
-  it('associates two logic variables', function() {
-    expect(unify(vx, vy)([])).to.eql([{'x': vy}]);
+  it('returns a goal function', function() {
+    expect(unify(vu, vv)).to.be.a('function');
+  });
+
+  it('associates two logic variables if they unify in the given state', function() {
+    expect(unify(vu, vv)(smap({}))).to.eql([{'u': vv}]);
+  });
+
+  it('associates a logic variable and a value if they unify in the given state', function() {
+    expect(unify(vu, 'banana')(smap({}))).to.eql([{'u': 'banana'}]);
+    expect(unify('banana', vu)(smap({}))).to.eql([{'u': 'banana'}]);
+  });
+
+  it('may extend the map when the terms unify', function() {
+    expect(unify(vu, 'banana')(smap({'z': 'squirrels'})))
+      .to.eql([{'u': 'banana', 'z': 'squirrels'}]);
+  });
+
+  it('returns empty if the terms cannot be unified', function() {
+    expect(unify(vu, "banana")(smap({'u': 'mango'}))).to.eql([]);
   });
 });

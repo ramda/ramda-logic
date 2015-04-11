@@ -2,16 +2,24 @@
   "name": "rlg",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "bin": {
-    "mocha": "node_modules/mocha/bin/mocha"
-  },
-  "scripts": {
-    "test": "mocha test/"
-  },
+  "author": "Michael Hurley <mh@buzzdecafe.com>",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/buzzdecafe/rlg.git"
+  },
+  "main": "index.js",
+  "bin": {
+    "jshint": "node_modules/jshint/bin/jshint",
+    "mocha": "node_modules/mocha/bin/mocha"
+  },
+  "jshintConfig": {
+    "eqnull": true
+  },
+  "scripts": {
+    "hint": "jshint src/* test/*",
+    "test": "npm run hint && mocha test/",
+    "testw": "npm run hint && mocha -w test/"
   },
   "keywords": [
     "logic",
@@ -19,8 +27,6 @@
     "microkanren",
     "minikanren"
   ],
-  "author": "Michael Hurley <mh@buzzdecafe.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/buzzdecafe/rlg/issues"
   },
