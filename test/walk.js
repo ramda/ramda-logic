@@ -19,4 +19,12 @@ describe('walk', function() {
     expect(lvar.is(walked)).to.equal(true);
     expect(walked.equals(lvar('x'))).to.equal(true);
   });
+
+  it('recursively looks up a value through logic variables', function() {
+    var s = smap({'x': lvar('y'), 'y': lvar('z'), 'z': lvar('a'), 'a': 'VALUE'});
+    expect(walk(lvar('a'), s)).to.equal('VALUE');
+    expect(walk(lvar('z'), s)).to.equal('VALUE');
+    expect(walk(lvar('y'), s)).to.equal('VALUE');
+    expect(walk(lvar('x'), s)).to.equal('VALUE');
+  });
 });

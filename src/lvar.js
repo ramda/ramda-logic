@@ -17,12 +17,12 @@ function toString() {
 }
 
 function lvar(name) {
-  return Object.freeze({
+  return {
     name: name,
     isLvar: true,
     equals: _equals,
     toString: toString
-  });
+  };
 }
 
 // (define (var? x) (vector? x))

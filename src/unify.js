@@ -6,7 +6,9 @@ var succeed = require('./succeed');
 var walk = require('./walk');
 
 var eqDeep = R.eqDeep;
+var head = R.head;
 var isArrayLike = R.isArrayLike;
+var tail = R.tail;
 
 function _unify(l, r, s) {
   // To unify two terms in a substitution, both are walked in that substitution.
