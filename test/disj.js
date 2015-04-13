@@ -1,4 +1,5 @@
 var expect = require('chai').expect;
+var conj = require('../src/conj');
 var disj = require('../src/disj');
 var succeed = require('../src/succeed');
 var fail = require('../src/fail');
@@ -19,5 +20,13 @@ describe('disj', function() {
     expect(neitherSucceed(10)).to.eql([]);
   });
 
-
+  it('can compose larger goals', function() {
+    expect(disj(
+          disj(fail, succeed),
+          conj(
+            disj(function(x) { return succeed(x + 1); }, function(x) { return succeed(x + 10); }),
+            disj(succeed, succeed)
+          )
+        )(100)).to.eql([100, 101,101, 110, 110]);
+  });
 });
