@@ -1,26 +1,62 @@
 var expect = require('chai').expect;
+var _ = require('highland');
+
 var conj = require('../src/conj');
-var succeed = require('../src/succeed');
 var fail = require('../src/fail');
+var succeed = require('../src/succeed');
+
 
 describe('conj', function() {
-  function multi(x) { return [x, (x + 1), (x + 2)]; }
-  function add1(x) { return [x + 1]; }
+  function multi(x) { return _([x, (x + 1), (x + 2)]); }
+  function add1(x) { return _([x + 1]); }
   var bothSucceed = conj(succeed, succeed);
   var firstSucceed = conj(succeed, fail);
   var secondSucceed = conj(fail, succeed);
   var neitherSucceed = conj(fail, fail);
 
-  it('returns the output of f2 applied to all the results of f1.', function() {
-    expect(bothSucceed(10)).to.eql([10]);
-    expect(conj(multi, add1)(1)).to.eql([2, 3, 4]);
+  it('returns a stream', function() {
+    expect(_.isStream(bothSucceed(999))).to.equal(true);
   });
 
-  it('it returns empty if either goal failed', function() {
-    expect(firstSucceed(10)).to.eql([]);
-    expect(secondSucceed(10)).to.eql([]);
-    expect(neitherSucceed(10)).to.eql([]);
-    expect(conj(multi, fail)(1)).to.eql([]);
-    expect(conj(fail, add1)(1)).to.eql([]);
+  it('returns the output of f2 applied to all the results of f1.', function(done) {
+    bothSucceed(10).toArray(function(xs) {
+      expect(xs).to.eql([10]);
+      done();
+    });
+  });
+
+  it('works with lists of more than one element', function(done) {
+    conj(multi, add1)(1).toArray(function(xs) {
+      expect(xs).to.eql([2, 3, 4]);
+      done();
+    });
+  });
+
+  it('it returns empty if only the first goal succeeded', function(done) {
+    firstSucceed(10).toArray(function(xs) {
+      expect(xs).to.eql([]);
+      done();
+    });
+  });
+
+  it('it returns empty if only the second goal succeeded', function(done) {
+    secondSucceed(10).toArray(function(xs) {
+      expect(xs).to.eql([]);
+      done();
+    });
+  });
+
+  it('it returns empty if both goals failed', function(done) {
+    neitherSucceed(10).toArray(function(xs) {
+      expect(xs).to.eql([]);
+      done();
+    });
+  });
+
+  it('holds for longer lists (1)', function(done) {
+    conj(multi, fail)(1).toArray(function(xs) {
+      expect(xs).to.eql([]);
+      done();
+    });
   });
 });

@@ -1,9 +1,10 @@
 var expect = require('chai').expect;
-var fail = require('../src/fail');
+var _ = require('highland');
+
 var lvar = require('../src/lvar');
 var smap = require('../src/smap');
-var succeed = require('../src/succeed');
 var unify = require('../src/unify');
+
 
 describe('unify', function() {
   var vu = lvar('u');
@@ -15,25 +16,45 @@ describe('unify', function() {
     expect(unify(vu, vv)).to.be.a('function');
   });
 
-  it('associates two logic variables if they unify in the given state', function() {
-    expect(unify(vu, vv)(smap({}))).to.eql(succeed({'u': vv}));
+  it('associates two logic variables if they unify in the given state', function(done) {
+    unify(vu, vv)(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{'u': vv}]);
+      done();
+    });
   });
 
-  it('associates a logic variable and a value if they unify in the given state', function() {
-    expect(unify(vu, 'banana')(smap({}))).to.eql(succeed({'u': 'banana'}));
-    expect(unify('banana', vu)(smap({}))).to.eql(succeed({'u': 'banana'}));
+  it('associates a logic variable and a value if they unify in the state (1)', function(done) {
+    unify(vu, 'banana')(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{'u': 'banana'}]);
+      done();
+    });
   });
 
-  it('may extend the map when the terms unify', function() {
-    expect(unify(vu, 'banana')(smap({'z': 'squirrels'})))
-      .to.eql(succeed({'u': 'banana', 'z': 'squirrels'}));
+  it('associates a logic variable and a value if they unify in the state (2)', function(done) {
+    unify('banana', vu)(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{'u': 'banana'}]);
+      done();
+    });
   });
 
-  it('returns empty if the terms cannot be unified', function() {
-    expect(unify(vu, "banana")(smap({'u': 'mango'}))).to.eql(fail());
+  it('may extend the map when the terms unify', function(done) {
+    unify(vu, 'banana')(smap({'z': 'squirrels'})).toArray(function(xs) {
+      expect(xs).to.eql([{'u': 'banana', 'z': 'squirrels'}]);
+      done();
+    });
   });
 
-  xit('can unify inside a list', function() {
-    expect(unify([lvar('x'), 2, 3], ['banana', 2, 3])(smap({}))).to.eql(succeed({x: 'banana'}));
+  it('returns empty if the terms cannot be unified', function(done) {
+    unify(vu, "banana")(smap({'u': 'mango'})).toArray(function(xs) {
+      expect(xs).to.eql([]);
+      done();
+    });
+  });
+
+  xit('can unify inside a list', function(done) {
+    unify([lvar('x'), 2, 3], ['banana', 2, 3])(smap({})).toArray(function(xs) {
+      expect(xs).to.eql(succeed({x: 'banana'}));
+      done();
+    });
   });
 });

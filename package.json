@@ -1,6 +1,6 @@
 {
   "name": "rlg",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "author": "Michael Hurley <mh@buzzdecafe.com>",
   "license": "MIT",
@@ -32,7 +32,8 @@
   },
   "homepage": "https://github.com/buzzdecafe/rlg",
   "dependencies": {
-    "ramda": "0.13.0"
+    "ramda": "0.13.0",
+    "highland": "2.4.0"
   },
   "devDependencies": {
     "chai": "2.1.0",

@@ -10,7 +10,10 @@ describe('fresh', function() {
     expect(fresh(q5)).to.be.a('function');
   });
 
-  it('creates a new logic variable in the returned state', function() {
-    expect(fresh(q5)(smap({}))).to.eql(succeed({'_.0': 5}));
+  it('creates a new logic variable in the returned state', function(done) {
+    fresh(q5)(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{'_.0': 5}]);
+      done();
+    });
   });
 });

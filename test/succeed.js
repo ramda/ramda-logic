@@ -1,13 +1,47 @@
 var expect = require('chai').expect;
+var _ = require('highland');
+
 var succeed = require('../src/succeed');
 
+
 describe('succeed', function() {
-  it('returns its argument wrapped up', function() {
-    expect(succeed(1)).to.eql([1]);
-    expect(succeed([1])).to.eql([[1]]);
-    expect(succeed({})).to.eql([{}]);
-    expect(succeed('abc')).to.eql(['abc']);
-    expect(succeed(true)).to.eql([true]);
-    expect(succeed([true, false])).to.eql([[true, false]]);
+  it('wraps a number in a stream', function(done) {
+    expect(_.isStream(succeed(1))).to.equal(true);
+    succeed(1).toArray(function(xs) {
+      expect(xs).to.eql([1]);
+      done();
+    });
+  });
+
+  it('wraps an array in a stream', function(done) {
+    expect(_.isStream(succeed([1]))).to.equal(true);
+    succeed([1]).toArray(function(xs) {
+      expect(xs).to.eql([[1]]);
+      done();
+    });
+  });
+
+  it('wraps an object in a stream', function(done) {
+    expect(_.isStream(succeed({}))).to.equal(true);
+    succeed({}).toArray(function(xs) {
+      expect(xs).to.eql([{}]);
+      done();
+    });
+  });
+
+  it('wraps a string in a stream', function(done) {
+    expect(_.isStream(succeed('abc'))).to.equal(true);
+    succeed('abc').toArray(function(xs) {
+      expect(xs).to.eql(['abc']);
+      done();
+    });
+  });
+
+  it('wraps a boolean in a stream', function(done) {
+    expect(_.isStream(succeed(true))).to.equal(true);
+    succeed(true).toArray(function(xs) {
+      expect(xs).to.eql([true]);
+      done();
+    });
   });
 });
