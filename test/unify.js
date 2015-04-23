@@ -51,9 +51,30 @@ describe('unify', function() {
     });
   });
 
-  xit('can unify inside a list', function(done) {
+  it('can unify inside a list (1)', function(done) {
     unify([lvar('x'), 2, 3], ['banana', 2, 3])(smap({})).toArray(function(xs) {
-      expect(xs).to.eql(succeed({x: 'banana'}));
+      expect(xs).to.eql([{x: 'banana'}]);
+      done();
+    });
+  });
+
+  it('can unify inside a list (2)', function(done) {
+    unify([1, lvar('x'), 3], [1, 'banana', 3])(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{x: 'banana'}]);
+      done();
+    });
+  });
+
+  it('can unify inside a list (2)', function(done) {
+    unify([1, 2, lvar('x')], [1, 2, 'banana'])(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{x: 'banana'}]);
+      done();
+    });
+  });
+  
+  it('can fail to unify inside a list', function(done) {
+    unify([1, 2, lvar('x')], ['cherry', 'grape', 'banana'])(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([]);
       done();
     });
   });

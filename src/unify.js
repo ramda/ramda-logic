@@ -32,7 +32,11 @@ function _unify(l, r, s) {
   // If both terms walk to pairs, the cars and cdrs are unified recursively,
   // succeeding if unification succeeds in the one and then the other.
   if (isArrayLike(u) && isArrayLike(v)) {
-    return _unify(head(u), head(v), s) && _unify(tail(u), tail(v), s);
+    var s1;
+    if (u.length > 0 && v.length > 0) {
+      s1 = _unify(head(u), head(v), s);
+      return s1 ? _unify(tail(u), tail(v), s1) : s1;
+    }
   }
   
   // non-variable, non-pair terms unify if they are identical under `eqv?`
