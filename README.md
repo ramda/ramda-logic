@@ -1,4 +1,4 @@
-# rlg
+# ramda-logic
 
 A microKanren implementation.
 
