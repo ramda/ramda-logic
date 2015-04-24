@@ -1,12 +1,12 @@
 {
-  "name": "rlg",
+  "name": "ramda-logic",
   "version": "0.0.1",
-  "description": "",
+  "description": "A microKanren implementation",
   "author": "Michael Hurley <mh@buzzdecafe.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/buzzdecafe/rlg.git"
+    "url": "git://github.com/buzzdecafe/ramda-logic.git"
   },
   "main": "index.js",
   "bin": {
@@ -28,9 +28,9 @@
     "minikanren"
   ],
   "bugs": {
-    "url": "https://github.com/buzzdecafe/rlg/issues"
+    "url": "https://github.com/buzzdecafe/ramda-logic/issues"
   },
-  "homepage": "https://github.com/buzzdecafe/rlg",
+  "homepage": "https://github.com/buzzdecafe/ramda-logic",
   "dependencies": {
     "ramda": "0.13.0",
     "highland": "2.4.0"
