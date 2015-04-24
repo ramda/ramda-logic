@@ -65,7 +65,7 @@ describe('unify', function() {
     });
   });
 
-  it('can unify inside a list (2)', function(done) {
+  it('can unify inside a list (3)', function(done) {
     unify([1, 2, lvar('x')], [1, 2, 'banana'])(smap({})).toArray(function(xs) {
       expect(xs).to.eql([{x: 'banana'}]);
       done();
