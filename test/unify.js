@@ -72,6 +72,13 @@ describe('unify', function() {
     });
   });
   
+  it('can unify two variables inside a list', function(done) {
+    unify([1, lvar('x'), 3, lvar('y'), 5], [1, 2, 3, 4, 5])(smap({})).toArray(function(xs) {
+      expect(xs).to.eql([{x: 2, y: 4}]);
+      done();
+    });
+  });
+
   it('can fail to unify inside a list', function(done) {
     unify([1, 2, lvar('x')], ['cherry', 'grape', 'banana'])(smap({})).toArray(function(xs) {
       expect(xs).to.eql([]);
