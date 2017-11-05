@@ -1,5 +1,5 @@
-var merge = require('ramda').merge;
+import { merge } from 'ramda';
 
-module.exports = function smap(bindings) {
+export default function smap(bindings) {
   return merge({}, bindings);
-};
+}

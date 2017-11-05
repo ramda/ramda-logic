@@ -1,6 +1,5 @@
-var _ = require('highland');
+import Stream from './stream';
 
-
-module.exports = function fail(x) {
-  return _([]);
-};
+export default function fail(_) { // eslint-disable-line no-unused-vars
+  return Stream.Empty;
+}

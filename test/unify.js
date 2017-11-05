@@ -1,16 +1,14 @@
-var expect = require('chai').expect;
-var _ = require('highland');
+const expect = require('chai').expect;
+const _ = require('highland');
 
-var lvar = require('../src/lvar');
-var smap = require('../src/smap');
-var unify = require('../src/unify');
+const lvar = require('../src/lvar');
+const smap = require('../src/smap');
+const unify = require('../src/unify');
 
 
 describe('unify', function() {
-  var vu = lvar('u');
-  var vv = lvar('v');
-  var vw = lvar('w');
-  var vx = lvar('x');
+  const vu = lvar('u');
+  const vv = lvar('v');
 
   it('returns a goal function', function() {
     expect(unify(vu, vv)).to.be.a('function');
@@ -45,7 +43,7 @@ describe('unify', function() {
   });
 
   it('returns empty if the terms cannot be unified', function(done) {
-    unify(vu, "banana")(smap({'u': 'mango'})).toArray(function(xs) {
+    unify(vu, 'banana')(smap({'u': 'mango'})).toArray(function(xs) {
       expect(xs).to.eql([]);
       done();
     });

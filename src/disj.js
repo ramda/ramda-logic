@@ -1,5 +1,3 @@
-module.exports = function disj(f1, f2) {
-  return function(x) {
-    return f1(x).concat(f2(x));
-  };
-};
+export default function disj(f1, f2) {
+  return x => f1(x).concat(f2(x));
+}
