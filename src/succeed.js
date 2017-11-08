@@ -1,7 +1,5 @@
-var h = require('highland');
-var stream = require('./stream');
+import Stream from './stream';
 
-
-module.exports = function succeed(x) {
-  return h([x]);
-};
+export default function succeed(x) {
+  return Stream.of(x);
+}

@@ -1,8 +1,6 @@
-//var runN = require('./runN');
+import smap from './smap';
 
-//module.exports = runN(Infinity);
-var smap = require('./smap');
-
-module.exports = function run(goal) {
+export default function run(goal) {
   return goal(smap({}));
-};
+}
+

@@ -1,5 +1,4 @@
-module.exports = function conj(f1, f2) {
-  return function(x) {
-    return f1(x).flatMap(f2);
-  };
-};
+export default function conj(f1, f2) {
+  return x => f1(x).chain(f2);
+}
+

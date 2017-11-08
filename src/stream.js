@@ -1,61 +1,100 @@
+import Type from 'union-type';
 
-function isEmpty(x) {
-  return x == null || x.length === 0;
-}
 
-function isFunction(x) {
-  return typeof x === 'function';
-}
+// `tail` function must be return a Stream type, but no way to enforce that without evaluating it :-(
+const Stream = Type({
+  Empty: [],
+  Cons:  [() => true, Function]
+});
 
-function Stream(x, xs) {
-  this.head = x;
-  this.tail = xs;
-}
-Stream.prototype.concat = function(ys) {
-  return new Stream(this.head, this.tail.concat(ys.tail));
+Stream.prototype.chain = function(f) {
+  return Stream.case({
+    Empty: ()           => Stream.Empty,
+    Cons:  (head, tail) => f(head).concat(tail().chain(f))
+  }, this);
 };
+
+Stream.prototype.concat = function(s) {
+  return Stream.case({
+    Empty: ()           => s,
+    Cons:  (head, tail) => Stream.Cons(head, () => tail().concat(s))
+  }, this);
+};
+
+Stream.prototype.drop = function(n) {
+  return Stream.case({
+    Empty: Stream.empty,
+    Cons: (head, tail) => n < 1   ? Stream.Cons(head, tail) :
+      n === 1 ? tail()
+        : tail().drop(n - 1)
+  }, this);
+};
+
+Stream.prototype.filter = function(p) {
+  return Stream.case({
+    Empty: Stream.empty,
+    Cons: (head, tail) => p(head) ? Stream.Cons(head, () => tail().filter(p))
+      : tail().filter(p)
+  }, this);
+};
+
+Stream.prototype.head = function() {
+  return Stream.case({
+    Empty: ()        => Stream.Empty,
+    Cons:  (head, _) => head          // eslint-disable-line no-unused-vars
+  }, this);
+};
+
+Stream.prototype.isEmpty = function() {
+  return Stream.case({
+    Empty: () => true,
+    Cons:  () => false
+  }, this);
+};
+
+Stream.prototype.isStream = () => true;
+
 Stream.prototype.map = function(f) {
-  return new Stream(f(this.head), map(f, this.tail));
-};
-Stream.prototype.chain = function(g) {
-  return new Stream(g(this.xs));
-};
-Stream.prototype.empty = function() {
-  return _empty;
-};
-Stream.prototype.of = function(x) {
-  return new Stream(x, _empty);
-};
-Stream.of = function(x) {
-  return isFunction(x) ? new Immature(x, _empty) : Stream.prototype.of;
+  return Stream.case({
+    Empty: ()           => Stream.Empty,
+    Cons:  (head, tail) => Stream.Cons(f(head), () => tail().map(f))
+  }, this);
 };
 
-function Empty() {}
-Empty.prototype = Object(Stream.prototype);
-Empty.prototype.constructor = Stream;
-var _empty = new Empty();
-
-function Immature(fn) {
-  this.xs = fn;
-}
-Immature.prototype = Object.create(Stream.prototype);
-Immature.prototype.constructor = Immature;
-Immature.prototype.concat = function(ys) {
-  var s = this;
-  return new Immature(function(ys) {
-    return new Stream(s.xs().concat(ys.tail));
-  });
-};
-Immature.prototype.chain = function(g) {
-  return new Stream(g(this.xs()));
+Stream.prototype.tail = function() {
+  return Stream.case({
+    Empty: ()        => Stream.Empty,
+    Cons:  (_, tail) => tail()
+  }, this);
 };
 
-module.exports = function stream(x) {
-  if (isEmpty(x)) {
-    return _empty;
-  }
-  if (isFunction(x)) {
-    return new Immature(x, _empty);
-  }
-  return new Stream(x, _empty);
+Stream.prototype.take = function(n) {
+  return Stream.case({
+    Empty: Stream.empty,
+    Cons: (head, tail) => n < 1 ? Stream.Empty
+      : Stream.Cons(head, () => tail().take(n - 1))
+  }, this);
 };
+Stream.prototype.toArray = function() {
+  return Stream.case({
+    Empty: ()           => [],
+    Cons:  (head, tail) => [head].concat(tail().toArray())
+  }, this);
+};
+
+Stream.prototype.toString = function() {
+  return Stream.case({
+    Empty: () => 'Empty',
+    Cons: (head, tail) => `Cons(${head}, ${tail().toString()})`
+  }, this);
+};
+
+Stream.empty = () => Stream.Empty;
+
+Stream.fromArray = xs => xs.reduceRight((acc, x) => Stream.Cons(x, () => acc), Stream.Empty);
+
+Stream.isStream = s => s && s.isStream === Stream.prototype.isStream && s.isStream(); // force to Bool
+
+Stream.of = x => Stream.Cons(x, () => Stream.Empty);
+
+export default Stream;
