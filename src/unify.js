@@ -31,9 +31,11 @@ function _unify(l, r, s) {
   // If both terms walk to pairs, the cars and cdrs are unified recursively,
   // succeeding if unification succeeds in the one and then the other.
   if (Stream.isStream(u) && Stream.isStream(v)) {
-    if (!u.isEmpty() && !v.isEmpty()) {
+    if (u.isEmpty() && v.isEmpty()) {
+      return s;
+    } else if (!u.isEmpty() && !v.isEmpty()) {
       const s1 = _unify(u.head(), v.head(), s);
-      return s1 ? _unify(u.tail(), v.tail(), s1) : s1;
+      return s1 === FAILURE ? FAILURE : _unify(u.tail(), v.tail(), s1);
     } else {
       return FAILURE;
     }
