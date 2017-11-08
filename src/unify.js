@@ -14,9 +14,10 @@ function _unify(l, r, s) {
   const v = walk(r, s);
 
   // If the two terms walk to the same variable, the substitution is returned unchanged.
-  if (lvar.isLvar(u) && u.equals(v)) {
+  if (lvar.equals(u, v)) {
     return s;
-  } 
+  }
+
   // when one of the two terms walks to a variable, the substitution is extended,
   // binding the variable to which that term walks with the value to which the other 
   // term walks.
@@ -56,5 +57,5 @@ export default function unify(u, v) {
     const state = _unify(u, v, s);
     return state === FAILURE ? fail(state) : succeed(state);
   };
-};
+}
 

@@ -1,4 +1,4 @@
-import { compose, pipe, filter, map, max, split, nth, match, keys } from 'ramda';
+import { apply, compose, pipe, filter, map, split, nth, match, keys } from 'ramda';
 import lvar from './lvar';
 
 const rx = /^_\.(\d+)/;
@@ -6,7 +6,7 @@ const prefix = '_.';
 const maxK = pipe(
   filter(match(rx)),
   map(compose(parseInt, nth(1), split('.'))),
-  max
+  apply(Math.max)
 );
 
 const getNext = s => {

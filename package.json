@@ -10,16 +10,15 @@
   },
   "main": "index.js",
   "bin": {
-    "jshint": "node_modules/jshint/bin/jshint",
     "mocha": "node_modules/mocha/bin/mocha"
   },
   "jshintConfig": {
     "eqnull": true
   },
   "scripts": {
-    "hint": "jshint src/* test/*",
-    "test": "npm run hint && mocha test/",
-    "testw": "npm run hint && mocha -w test/"
+    "lint": "eslint \"src/**\" \"test/**\"",
+    "test": "npm run lint && mocha --require babel-polyfill --require babel-register --require test/helpers/babel.js",
+    "watch": "npm run lint && mocha --compilers js:babel-register --watch --watch-extensions js"
   },
   "keywords": [
     "logic",
@@ -35,14 +34,18 @@
     "ramda": "0.25.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-register": "^6.26.0",
     "chai": "2.1.0",
     "eslint": "4.9.0",
-    "jshint": "^2.6.3",
-    "mocha": "2.x.x",
+    "mocha": "4.0.1",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.6",
