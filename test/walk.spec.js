@@ -16,7 +16,6 @@ describe('walk', function() {
 
   it('returns a logic variable if it is not in the s-map', function() {
     const walked = walk(lvar.of('x'), smap({}));
-    console.log(JSON.stringify(walked)); //eslint-disable-line no-console
     expect(lvar.isLvar(walked)).to.equal(true);
     expect(lvar.equals(walked, lvar.of('x'))).to.equal(true);
   });

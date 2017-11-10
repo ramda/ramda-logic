@@ -8,6 +8,16 @@ import walk from './walk';
 
 const FAILURE = Object.freeze({});
 
+function unifyStreams(u, v, s) {
+  if (u.isEmpty() && v.isEmpty()) {
+    return s;
+  } else if (!u.isEmpty() && !v.isEmpty()) {
+    const s1 = _unify(u.head(), v.head(), s);
+    return s1 === FAILURE ? FAILURE : unifyStreams(u.tail(), v.tail(), s1);
+  }
+  return FAILURE;
+}
+
 function _unify(l, r, s) {
   // To unify two terms in a substitution, both are walked in that substitution.
   const u = walk(l, s);
@@ -31,14 +41,7 @@ function _unify(l, r, s) {
   // If both terms walk to pairs, the cars and cdrs are unified recursively,
   // succeeding if unification succeeds in the one and then the other.
   if (Stream.isStream(u) && Stream.isStream(v)) {
-    if (u.isEmpty() && v.isEmpty()) {
-      return s;
-    } else if (!u.isEmpty() && !v.isEmpty()) {
-      const s1 = _unify(u.head(), v.head(), s);
-      return s1 === FAILURE ? FAILURE : _unify(u.tail(), v.tail(), s1);
-    } else {
-      return FAILURE;
-    }
+    return unifyStreams(u, v, s);
   }
   
   // non-variable, non-pair terms unify if they are identical under `eqv?`
@@ -60,4 +63,3 @@ export default function unify(u, v) {
     return state === FAILURE ? fail(state) : succeed(state);
   };
 }
-
