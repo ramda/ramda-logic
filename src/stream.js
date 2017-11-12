@@ -97,4 +97,6 @@ Stream.isStream = s => s && s.isStream === Stream.prototype.isStream && s.isStre
 
 Stream.of = x => Stream.Cons(x, () => Stream.Empty);
 
+export const cons = (a, b) => Stream.Cons(a, () => b);
+
 export default Stream;
