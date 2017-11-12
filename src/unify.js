@@ -2,7 +2,7 @@ import { equals } from 'ramda';
 import Type from 'union-type';
 import exts from './exts';
 import lvar from './lvar';
-import Stream from './stream';
+import { isStream } from './stream';
 import walk from './walk';
 
 export const Unified = Type({
@@ -37,7 +37,7 @@ export default function unify(l, r, s) {
 
   // If both terms walk to pairs, the cars and cdrs are unified recursively,
   // succeeding if unification succeeds in the one and then the other.
-  if (Stream.isStream(u) && Stream.isStream(v)) {
+  if (isStream(u) && isStream(v)) {
     if (u.isEmpty() && v.isEmpty()) {
       return OK(s);
     } else if (!u.isEmpty() && !v.isEmpty()) {

@@ -5,12 +5,12 @@ import conj from '../src/conj';
 import fail from '../src/fail';
 import lvar from '../src/lvar';
 import run from '../src/run';
-import Stream from '../src/stream';
+import { fromArray } from '../src/stream';
 import succeed from '../src/succeed';
 
 describe('choice', () => {
 
-  const s123 = Stream.fromArray([1, 2, 3]);
+  const s123 = fromArray([1, 2, 3]);
 
   it('succeeds if it finds an element in a list', () => {
     const s = run(choice(2, s123));
@@ -33,10 +33,10 @@ describe('choice', () => {
   });
 
   describe('finding common list elements', () => {
-    const s123 = Stream.fromArray([1, 2, 3]);
-    const s345 = Stream.fromArray([3, 4, 5]);
-    const s3417 = Stream.fromArray([3, 4, 1, 7]);
-    const s1347 = Stream.fromArray([13, 4, 7]);
+    const s123 = fromArray([1, 2, 3]);
+    const s345 = fromArray([3, 4, 5]);
+    const s3417 = fromArray([3, 4, 1, 7]);
+    const s1347 = fromArray([13, 4, 7]);
 
     const commonEl = lv => (l1, l2) => conj(
       choice(lv, l1),

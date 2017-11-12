@@ -3,12 +3,12 @@ import { expect } from 'chai';
 import conso from '../src/conso';
 import lvar from '../src/lvar';
 import run from '../src/run';
-import Stream from '../src/stream';
+import { fromArray } from '../src/stream';
 
 describe('conso', () => {
 
   it('can unify a head and tail a logic variable representing a list', () => {
-    const xs = run(conso(1, Stream.fromArray([2, 3]), lvar.of('x')));
+    const xs = run(conso(1, fromArray([2, 3]), lvar.of('x')));
     const xBinding = xs.head().x; // success stream, first value bound to `x`
 
     expect(xBinding.toArray()).to.eql([1, 2, 3]);
@@ -16,7 +16,7 @@ describe('conso', () => {
 
 
   it('can unify head and tail logic variables with a list', () => {
-    const xs = run(conso(lvar.of('head'), lvar.of('tail'), Stream.fromArray([1, 2, 3])));
+    const xs = run(conso(lvar.of('head'), lvar.of('tail'), fromArray([1, 2, 3])));
     const headBinding = xs.head().head; // first value bound to `head`
     const tailBinding = xs.head().tail; // first value bound to `tail`
 
