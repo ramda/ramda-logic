@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 
-import Stream from '../src/stream';
+import { fromArray, isStream } from '../src/stream';
 import conj from '../src/conj';
 import fail from '../src/fail';
 import succeed from '../src/succeed';
 
 
 describe('conj', function() {
-  function multi(x) { return Stream.fromArray([x, (x + 1), (x + 2)]); }
-  function add1(x) { return Stream.fromArray([x + 1]); }
+  function multi(x) { return fromArray([x, (x + 1), (x + 2)]); }
+  function add1(x) { return fromArray([x + 1]); }
   
   const bothSucceed = conj(succeed, succeed);
   const firstSucceed = conj(succeed, fail);
@@ -16,7 +16,7 @@ describe('conj', function() {
   const neitherSucceed = conj(fail, fail);
 
   it('returns a stream', function() {
-    expect(Stream.isStream(bothSucceed(999))).to.equal(true);
+    expect(isStream(bothSucceed(999))).to.equal(true);
   });
 
   it('returns the output of f2 applied to all the results of f1.', function() {

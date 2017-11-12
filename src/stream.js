@@ -9,7 +9,7 @@ const Stream = Type({
 
 Stream.prototype.chain = function(f) {
   return Stream.case({
-    Empty: ()           => Stream.Empty,
+    Empty: empty,
     Cons:  (head, tail) => f(head).concat(tail().chain(f))
   }, this);
 };
@@ -23,7 +23,7 @@ Stream.prototype.concat = function(s) {
 
 Stream.prototype.drop = function(n) {
   return Stream.case({
-    Empty: Stream.empty,
+    Empty: empty,
     Cons: (head, tail) => n < 1   ? Stream.Cons(head, tail) :
       n === 1 ? tail()
         : tail().drop(n - 1)
@@ -32,7 +32,7 @@ Stream.prototype.drop = function(n) {
 
 Stream.prototype.filter = function(p) {
   return Stream.case({
-    Empty: Stream.empty,
+    Empty: empty,
     Cons: (head, tail) => p(head) ? Stream.Cons(head, () => tail().filter(p))
       : tail().filter(p)
   }, this);
@@ -40,7 +40,7 @@ Stream.prototype.filter = function(p) {
 
 Stream.prototype.head = function() {
   return Stream.case({
-    Empty: ()        => Stream.Empty,
+    Empty: empty,
     Cons:  (head, _) => head          // eslint-disable-line no-unused-vars
   }, this);
 };
@@ -56,21 +56,21 @@ Stream.prototype.isStream = () => true;
 
 Stream.prototype.map = function(f) {
   return Stream.case({
-    Empty: ()           => Stream.Empty,
+    Empty: empty,
     Cons:  (head, tail) => Stream.Cons(f(head), () => tail().map(f))
   }, this);
 };
 
 Stream.prototype.tail = function() {
   return Stream.case({
-    Empty: ()        => Stream.Empty,
+    Empty: empty,
     Cons:  (_, tail) => tail()
   }, this);
 };
 
 Stream.prototype.take = function(n) {
   return Stream.case({
-    Empty: Stream.empty,
+    Empty: empty,
     Cons: (head, tail) => n < 1 ? Stream.Empty
       : Stream.Cons(head, () => tail().take(n - 1))
   }, this);
@@ -89,12 +89,14 @@ Stream.prototype.toString = function() {
   }, this);
 };
 
-Stream.empty = () => Stream.Empty;
+export const empty = () => Stream.Empty;
 
-Stream.fromArray = xs => xs.reduceRight((acc, x) => Stream.Cons(x, () => acc), Stream.Empty);
+export const fromArray = xs => xs.reduceRight((acc, x) => Stream.Cons(x, () => acc), Stream.Empty);
 
-Stream.isStream = s => s && s.isStream === Stream.prototype.isStream && s.isStream(); // force to Bool
+export const isStream = s => s && s.isStream === Stream.prototype.isStream && s.isStream(); // force to Bool
 
-Stream.of = x => Stream.Cons(x, () => Stream.Empty);
+export const of = x => Stream.Cons(x, () => Stream.Empty);
+
+export const cons = (a, b) => Stream.Cons(a, () => b);
 
 export default Stream;

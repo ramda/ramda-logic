@@ -1,5 +1,5 @@
-import Stream from './stream';
+import { of as stream } from './stream';
 
 export default function succeed(x) {
-  return Stream.of(x);
+  return stream(x);
 }
