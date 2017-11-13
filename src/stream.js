@@ -95,7 +95,7 @@ export const fromArray = xs => xs.reduceRight((acc, x) => Stream.Cons(x, () => a
 
 export const isStream = s => s && s.isStream === Stream.prototype.isStream && s.isStream(); // force to Bool
 
-export const of = x => Stream.Cons(x, () => Stream.Empty);
+export const of = x => Stream.Cons(x, empty);
 
 export const cons = (a, b) => Stream.Cons(a, () => b);
 
